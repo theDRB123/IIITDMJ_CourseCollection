@@ -1,0 +1,44 @@
+{
+  "L1content": [
+    {
+      "title": "sem 1",
+      "L2content": [
+        {
+          "CourseTitle": "Introduction to Computer Science",
+          "CourseCode": "CS101",
+          "CourseDesc": "This course provides an introduction to computer science and programming. Students will learn about the basic building blocks of computer science and programming, including data types, variables, functions, and control structures, with an emphasis on the systematic development of algorithms. Students will also learn about the social and ethical implications of computing and the Internet. This course is intended for students who have never programmed before, and it is recommended for students who are considering a major in computer science.",
+          "CourseCredits": "3"
+        },
+        {
+          "CourseTitle": "Mathematics I",
+          "CourseCode": "MA101",
+          "CourseDesc": "This course provides an introduction to calculus and linear algebra. Students will learn about limits, derivatives, integrals, and applications of calculus, as well as vectors, matrices, and systems of linear equations. This course is intended for students who have taken high school mathematics and are interested in pursuing a degree in engineering or science.",
+          "CourseCredits": "4"
+        }
+      ]
+    },
+    {
+      "title": "sem 2",
+      "L2content": [
+        {
+          "CourseTitle": "Data Structures and Algorithms",
+          "CourseCode": "CS201",
+          "CourseDesc": "This course provides an introduction to data structures and algorithms. Students will learn about arrays, linked lists, stacks, queues, trees, and graphs, as well as sorting and searching algorithms. Students will also learn about algorithm analysis and design techniques. This course is intended for students who have completed CS101 or an equivalent course.",
+          "CourseCredits": "3"
+        },
+        {
+          "CourseTitle": "Mathematics II",
+          "CourseCode": "MA102",
+          "CourseDesc": "This course provides a continuation of calculus and linear algebra. Students will learn about multivariable calculus, differential equations, and applications of calculus, as well as eigenvectors, eigenvalues, and diagonalization of matrices. This course is intended for students who have completed MA101 or an equivalent course.",
+          "CourseCredits": "4"
+        },
+        {
+          "CourseTitle": "Physics I",
+          "CourseCode": "PH101",
+          "CourseDesc": "This course provides an introduction to classical mechanics. Students will learn about kinematics, forces, energy, momentum, and rotational motion, as well as oscillations, waves, and fluids. This course is intended for students who have taken high school physics and are interested in pursuing a degree in engineering or science.",
+          "CourseCredits": "4"
+        }
+      ]
+    }
+  ]
+}

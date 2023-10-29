@@ -1,9 +1,7 @@
 import ContentL2 from "./ContentL2"
 
-const ContentL1 = ({ key, content }) => {
-    
-    console.log(content);
-
+const ContentL1 = ({ content }) => {
+    console.log(content.L2content)
     return (
         <div className='ContentL1 lg:w-[100%] md:w-[100%] sm:w-[100%] w-[100%] h-[auto] max-h-[310px] overflow-auto flex-col bg-[#80a3a7bc] rounded-[3px] p-[10px] pt-0 mb-[20px]' style={
             {
@@ -22,6 +20,7 @@ const ContentL1 = ({ key, content }) => {
                     // <ContentL2 key={content.CourseTitle} content={content}/>
                     return (<ContentL2 key={content.CourseTitle} content={content} />)
                 })}
+                {/* {content.L2Content.map((content2) => { console.log(content2); })} */}
             </div>
 
         </div>
