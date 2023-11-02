@@ -1,8 +1,10 @@
 
-const ContentL2 = ({ content }) => {
-    console.log(content)
+const ContentL2 = ({ content , getDetails }) => {
+
     return (
-        <div className='ContentL2 flex flex-wrap min-w-[200px] h-[100%] sm:w-[200px] md:min-w-[250px] bg-[#F5F9F9]  rounded-[2px] p-3 mr-[20px]'>
+        <div className='ContentL2 flex flex-wrap min-w-[200px] h-[100%] sm:w-[200px] md:min-w-[250px] bg-[#F5F9F9]  rounded-[2px] p-3 mr-[20px]' onClick={() => {
+            getDetails(content.CourseCode);
+        }}>
             <div className='CourseTitle text-[#344148c1] h-1 text-left w-[76%] text-l font-medium font-"Roboto Flex"  ' >
                 {content.CourseTitle}
             </div>
@@ -14,7 +16,7 @@ const ContentL2 = ({ content }) => {
             </div>
             <div className='CourseCredits self-end w-[100%] text-right'>
                 {content.CourseCredits} Credits
-            </div>
+            </div> 
         </div>
     )
 }

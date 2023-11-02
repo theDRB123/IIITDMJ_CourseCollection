@@ -7,6 +7,8 @@ let connection = mysql.createConnection({
     database: 'iiitdmj_coursecollection'
 })
 
+
+
 connection.connect((err) => {
     if(err) throw err;
     console.log("connected to database");

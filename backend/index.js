@@ -28,24 +28,87 @@ connection.connect((err) => {
 app.use(cors());
 
 app.get('/data', async (req, res) => {
-    data = fs.readFileSync('../data/rawData.json', 'utf-8', (err, data) => {
-        Console.log(err);
-    });
-
     const user = JSON.parse(req.query.user);
     const filter = JSON.parse(req.query.filter);
     const seperateBy = JSON.parse(req.query.seperateBy);
 
     let outputData = await generateData(user, filter, seperateBy);
 
-    // outputData = JSON.parse(outputData)
-
-    console.log(outputData);
-
     res.json(outputData);
     res.end();
 })
 
+app.get('/checkUser', async (req, res) => {
+    const user = JSON.parse(req.query.user)
+    //now send a query to the database to check if the user is admin or not
+
+})
+
+app.get('/getDetails', async (req, res) => {
+
+    const user = JSON.parse(req.query.user);
+    const courseCode = req.query.courseCode
+
+    const query = `SELECT * FROM course NATURAL JOIN instructor JOIN semisters where courseBranch = branch AND course.semNo = semisters.semNo AND courseCode = '${courseCode}'`
+
+    const getData = new Promise((resolve, reject) => {
+        connection.query(query, (err, result) => {
+            if (err) reject(err);
+            resolve(result);
+        })
+    })
+
+    let outputData = await getData
+    
+    console.log(outputData[0])
+    res.json(outputData[0]) 
+    res.end()
+})
+
+const validateUser = async(user) => {
+    let adminList;
+    const query2 = `SELECT * from admins`
+    const getAdmins = new Promise((resolve, reject) => {
+        connection.query(query2, (err, result) => {
+            if (err) reject(err);
+            resolve(result);
+        })
+    })
+    adminList = await getAdmins;
+
+    let isAdmin = false;
+    adminList.forEach(admin => {
+        if (admin.adminID == user.userID && admin.adminPass == user.password) {
+            isAdmin = true;
+        }
+    });
+    console.log(adminList)
+    return isAdmin
+}
+
+app.get('/editCourse', async (req, res) => { 
+    const user = JSON.parse(req.query.user);
+    const newCourse = JSON.parse(req.query.newCourse);
+
+    const query = `UPDATE course SET courseName = '${newCourse.courseName}', courseDesc = '${newCourse.courseDesc}', courseCredits = '${newCourse.courseCredits}', courseDept = '${newCourse.courseDept}', courseEval = '${newCourse.courseEval}', semNo = '${newCourse.semNo}' WHERE courseCode = '${newCourse.courseCode}'`
+
+    const isAdmin = await validateUser(user);
+    
+    if (isAdmin) {
+        connection.query(query, (err, result) => {
+            if (err) throw err;
+            console.log("course updated")
+        })
+    }else{console.log("user not admin \n" + user.userID)}
+    res.end();
+})
+
+app.get('/validate', async (req, res) => {
+    const user = JSON.parse(req.query.user);
+    const isAdmin = await validateUser(user);
+    res.send(isAdmin);
+    res.end();
+})
 
 
 //this function will generate the appropriate data according to the user, filter and seperateBy
@@ -68,27 +131,27 @@ const generateData = async (user, filter, seperateBy) => {
             "CourseCredits": course.courseCredits,
             "CourseDesc": course.courseDesc,
             "CourseDept": course.courseDept,
-            "CourseFaculty": course.instructorName
+            "CourseFaculty": course.instructorName,
+            "CourseBranch": course.courseBranch,
+            "CourseEval": course.courseEval,
+            "semNo": course.semNo
         }
     }
 
     //let rawData = data generated from the SQL queries by sending user branch and programme
     //const query = `SELECT * FROM course NATURAL JOIN instructor JOIN semisters where courseBranch = '${branch}' AND courseProgramme = '${programme}' AND course.semNo = semisters.semNo`
-    const query = `SELECT * FROM course NATURAL JOIN instructor JOIN semisters where courseBranch = ? AND courseProgramme = ? AND course.semNo = semisters.semNo`
+    const query = `SELECT * FROM course NATURAL JOIN instructor JOIN semisters where branch = ? AND courseProgramme = ? AND course.semNo = semisters.semNo`
 
     let rawData;
     const getData = new Promise((resolve, reject) => {
         connection.query(query, [branch, programme], (err, result) => {
-            console.log(query, [branch, programme])
             if (err) reject(err);
             resolve(result);
         })
     })
     rawData = await getData;
 
-    const filterData = new Promise((resolve, reject) => {
-
-    })
+    
     //then we will filter the rawData according to the filter options one by one
     let data = rawData;
     if (sem != null) {
@@ -120,6 +183,7 @@ const generateData = async (user, filter, seperateBy) => {
                 semList.push(element.semNo);
             }
         });
+        semList.sort()
         semList.forEach(element => {
             pushData = {
                 "title": `Sem ${element}`,
@@ -163,6 +227,7 @@ const generateData = async (user, filter, seperateBy) => {
                 creditsList.push(element.courseCredits);
             }
         });
+        creditsList.sort()
         creditsList.forEach(element => {
             pushData = {
                 "title": `${element} Credits`,
@@ -222,6 +287,7 @@ const generateData = async (user, filter, seperateBy) => {
     }
 
     //after sorting we will have the data in the client-side format and will be sent to the client
+    
     return outputData;
 }
 

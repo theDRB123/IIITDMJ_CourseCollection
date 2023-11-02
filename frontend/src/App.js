@@ -6,7 +6,7 @@ import "./index.css"
 import Sidebar from './Sidebar';
 import ContentL1 from './ContentL1';
 import axios from 'axios';
-
+import Details from './Details';
 
 const App = () => {
 
@@ -28,19 +28,22 @@ const App = () => {
     }
   );
 
+
   //getting the data from the backend server and providing it with the states
   useEffect(() => {
-    axios.get(`http://localhost:4000/data?user=${JSON.stringify(user)}&filter=${JSON.stringify(filter)}&seperateBy=${JSON.stringify(seperateBy)}`)
-      .then((res) => {
-        setData(res.data);
-        // console.log(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      })
+    reRender()
   }, []);
 
- 
+  const reRender = () => {
+    axios.get(`http://localhost:4000/data?user=${JSON.stringify(user)}&filter=${JSON.stringify(filter)}&seperateBy=${JSON.stringify(seperateBy)}`)
+    .then((res) => {
+      setData(res.data);
+      // console.log(res.data);
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+  }
 
 
   //search will be a simple text for searching 
@@ -49,13 +52,13 @@ const App = () => {
   const [filter, setFilter] = useState({
     "sem": 0,
     "dept": 0,
-    "credits": 4,
+    "credits": 0,
   });
-  
+
 
   const [user, setUser] = useState({
-    "name": "user",
-    "password": "password",
+    "userID": "dhruv22",
+    "password": "adminpass",
     "branch": "CSE",
     "programme": "BTECH"
   });
@@ -68,8 +71,9 @@ const App = () => {
     "year": false,
     "faculty": false
   });
-  
+
   const [open, setOpen] = useState(false);
+  const [showDetails, setShowDetails] = useState(false);
 
   useEffect(() => {
     axios.get(`http://localhost:4000/data?user=${JSON.stringify(user)}&filter=${JSON.stringify(filter)}&seperateBy=${JSON.stringify(seperateBy)}`)
@@ -80,7 +84,23 @@ const App = () => {
       .catch((err) => {
         console.log(err);
       })
-  }, [filter, seperateBy]);
+  }, [filter, seperateBy, setShowDetails]);
+
+
+  //get the data for the specified course id
+  const [details, setDetails] = useState()
+  const getDetails = async (courseCode) => {
+    console.log(courseCode)
+    axios.get(`http://localhost:4000/getDetails?courseCode=${courseCode}&user=${JSON.stringify(user)}`)
+      .then((res) => {
+        setDetails(res.data)
+        setShowDetails(true)
+        console.log(res)
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+  }
 
   return (
     <div className="container min-h-[100vh]" style={
@@ -90,7 +110,7 @@ const App = () => {
       }
     } >
 
-      <Sidebar open={open} setOpen={setOpen} search={search} setSearch={setSearch} filter={filter} setFilter={setFilter} seperateBy={seperateBy} setSeperateBy={setSeperateBy} />
+      {!showDetails && (<Sidebar open={open} setOpen={setOpen} search={search} setSearch={setSearch} filter={filter} setFilter={setFilter} seperateBy={seperateBy} setSeperateBy={setSeperateBy} />)}
 
       <div className="TitleContainer md:flex w-[100%] h-auto pb-5 left-0 top-[0px] sticky bg-[#f2f2f25f] backdrop-blur-sm mb-3"
         style={
@@ -108,10 +128,12 @@ const App = () => {
         </div>
       </div>
 
-      <div className='ContentL0 flex flex-wrap h-auto bg-[#e3e7ea00] p-3 pt-0'>
-        {data.L1content.map((content) => {
-          return (<ContentL1 key={content.title} content={content} />);
+      <div className='ContentL0 flex flex-wrap h-auto bg-[#e3e7ea00] p-3 pt-0 justify-center'>
+        {!showDetails && data.L1content.map((content) => {
+          return (<ContentL1 key={content.title} content={content} getDetails={getDetails} />);
         })}
+
+        {showDetails && (<Details content={details} setShowDetails={setShowDetails} user={user} reRender={reRender} />)}
 
       </div>
 
