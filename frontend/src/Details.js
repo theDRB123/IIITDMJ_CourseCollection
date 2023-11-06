@@ -22,10 +22,10 @@ const Details = ({ content, setShowDetails, user, reRender }) => {
   return (
     <>
       {!editMode && (<div className="DetailView flex-col w-[100%] ">
-        <div className="ButtonContainer h-[40px] w-[40px]  rounded-md text-center mr-[30px] mb-[20px] bg-[#5a8795]">
+        <div className="ButtonContainer h-[40px] w-[40px]  rounded-md text-center mr-[30px] mb-[0px] bg-[#5a8795]">
           <button className='backButton h-[40px] w-[40px]' onClick={() => { setShowDetails(false) }}><ArrowBackIosNewIcon sx={{ color: '#F5F9F9' }} /></button>
         </div>
-        <div className='ContentL2 flex flex-wrap  w-[90%] ml-[auto] mr-[auto] items-start justify-start h-[auto] h-max-[00px] min-h-[50vh]   bg-[#F5F9F9]  rounded-[10px] p-3 ' >
+        <div className='ContentL2 flex flex-wrap  w-[90%] ml-[auto] mr-[auto] items-start justify-start h-[auto]  min-h-[50vh]   bg-[#F5F9F9]  rounded-[10px] p-3 ' >
           <div className='CourseTitle text-[#344148c1] h-10 text-lg text-left w-[80%] md:w-[92%] text-l font-medium font-"Roboto Flex"  ' >
             {newCourse.courseName}
           </div>
@@ -33,18 +33,10 @@ const Details = ({ content, setShowDetails, user, reRender }) => {
             {newCourse.courseCode}
           </div>
           <div className='CourseDescription w-[100%] overflow-auto text-[#505C62] font-regular text-md align-top'>
-            <div className="content h-[200px]  lg:h-[250px]">
-              {newCourse.courseDesc}kkjfh
-              <br />
-              <br />
-              <br />
-              <br />
-              <br />
-              <br />
-              <br />a
+            <div className="content h-[200px]  lg:h-[240px]">
+              {newCourse.courseDesc}
             </div>
           </div>
-
           <div className='CourseInstructors text-[#798389] h-10 text-lg font-medium font-"Roboto Flex"'>
             {newCourse.instructorName}
           </div>
@@ -67,7 +59,6 @@ const Details = ({ content, setShowDetails, user, reRender }) => {
         </div>
         <div className='ContentL2 flex flex-wrap  w-[90%] ml-[auto] mr-[auto] items-start justify-start h-[auto] h-max-[00px] min-h-[50vh]   bg-[#F5F9F9]  rounded-[10px] p-3 ' >
           <div className='CourseTitle text-[#344148c1] h-10 text-lg text-left w-[80%] md:w-[92%] text-l font-medium font-"Roboto Flex"  ' >
-            {/* {content.courseName} */}
             <input type="text" value={newCourse.courseName} onChange={(e) => {
               setNewCourse({
                 ...newCourse,
@@ -86,14 +77,6 @@ const Details = ({ content, setShowDetails, user, reRender }) => {
           </div>
           <div className='CourseDescription w-[100%] overflow-auto text-[#505C62] font-regular text-md align-top'>
             <div className="content h-[200px]  lg:h-[250px]">
-              {/* {content.courseDesc}kkjfh */}
-              {/* <br />
-              <br />
-              <br />
-              <br />
-              <br />
-              <br />
-              <br />a */}
               <textarea type="text" className='textArea w-[90%]' value={newCourse.courseDesc} onChange={(e) => {
                 setNewCourse({
                   ...newCourse,

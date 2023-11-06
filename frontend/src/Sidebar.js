@@ -47,6 +47,7 @@ const Sidebar = ({ open, setOpen, search, setSearch, filter, setFilter, seperate
       <div className="hideButton bg-[#fff0] ml-[80%] p-2 w-[40px] h-[40px]">
         <button><ArrowBackIosNewIcon  sx={{ color: '#F5F9F9' }} /></button>
       </div>
+
       <div className='SearchBar flex md:h-[45px] h-[60px] w-[100%] bg-white rounded-[15px] mb-[40px] md:mb-[3vh] pl-4'>
         <label htmlFor="search" className='label invisible absolute' >SearchBar</label>
         <input type="text" name="search" placeholder='Search' id="search" className='search m-auto ml-0' />

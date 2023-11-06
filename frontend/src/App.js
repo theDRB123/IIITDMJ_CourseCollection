@@ -47,7 +47,7 @@ const App = () => {
 
 
   //search will be a simple text for searching 
-  const [search, setSearch] = useState();
+  const [search, setSearch] = useState("");
   //filter will have the dictionary with filter options
   const [filter, setFilter] = useState({
     "sem": 0,
@@ -130,7 +130,7 @@ const App = () => {
 
       <div className='ContentL0 flex flex-wrap h-auto bg-[#e3e7ea00] p-3 pt-0 justify-center'>
         {!showDetails && data.L1content.map((content) => {
-          return (<ContentL1 key={content.title} content={content} getDetails={getDetails} />);
+          return (<ContentL1 key={content.title} content={content} getDetails={getDetails} search={search} />);
         })}
 
         {showDetails && (<Details content={details} setShowDetails={setShowDetails} user={user} reRender={reRender} />)}
