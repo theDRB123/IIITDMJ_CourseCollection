@@ -7,6 +7,7 @@ import Sidebar from './Sidebar';
 import ContentL1 from './ContentL1';
 import axios from 'axios';
 import Details from './Details';
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 
 const App = () => {
 
@@ -36,13 +37,13 @@ const App = () => {
 
   const reRender = () => {
     axios.get(`http://localhost:4000/data?user=${JSON.stringify(user)}&filter=${JSON.stringify(filter)}&seperateBy=${JSON.stringify(seperateBy)}`)
-    .then((res) => {
-      setData(res.data);
-      // console.log(res.data);
-    })
-    .catch((err) => {
-      console.log(err);
-    })
+      .then((res) => {
+        setData(res.data);
+        // console.log(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      })
   }
 
 
@@ -72,19 +73,12 @@ const App = () => {
     "faculty": false
   });
 
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
   const [showDetails, setShowDetails] = useState(false);
 
   useEffect(() => {
-    axios.get(`http://localhost:4000/data?user=${JSON.stringify(user)}&filter=${JSON.stringify(filter)}&seperateBy=${JSON.stringify(seperateBy)}`)
-      .then((res) => {
-        setData(res.data);
-        // console.log(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      })
-  }, [filter, seperateBy, setShowDetails]);
+    reRender();
+  }, [filter, seperateBy, setShowDetails, search]);
 
 
   //get the data for the specified course id
@@ -95,12 +89,40 @@ const App = () => {
       .then((res) => {
         setDetails(res.data)
         setShowDetails(true)
-        console.log(res)
       })
       .catch((err) => {
         console.log(err);
       })
   }
+
+  const searchChecker = (content) => {
+    content.L2content = content.L2content.filter((course) => {
+      let flag = false;
+
+      const regex = new RegExp(search, 'gi');
+      if (course.CourseTitle.match(regex) || course.CourseCode.match(regex)) {
+        flag = true;
+      }
+
+      const regex2 = /^\s*$/
+      if (search.match(regex2)) {
+        flag = true
+      }
+      if (flag) {
+        return course
+      }
+    })
+
+    if (content.L2content.length > 0) {
+      return content
+    }
+  }
+
+  data.L1content = data.L1content.filter((content) => {
+    if (searchChecker(content)) {
+      return content
+    }
+  })
 
   return (
     <div className="container min-h-[100vh]" style={
@@ -112,7 +134,7 @@ const App = () => {
 
       {!showDetails && (<Sidebar open={open} setOpen={setOpen} search={search} setSearch={setSearch} filter={filter} setFilter={setFilter} seperateBy={seperateBy} setSeperateBy={setSeperateBy} />)}
 
-      <div className="TitleContainer md:flex w-[100%] h-auto pb-5 left-0 top-[0px] sticky bg-[#f2f2f25f] backdrop-blur-sm mb-3"
+      <div className="TitleContainer md:flex w-[100%] h-auto md:pb-5 left-0 top-[0px] sticky bg-[#f2f2f25f] backdrop-blur-sm mb-3"
         style={
           {
             background: "linear-gradient(to bottom, #29B6C9, #f2f2f25f)",
@@ -123,8 +145,11 @@ const App = () => {
             IIIDMJ Course Collection
           </div>
         </div>
-        <div className='NavBar flex items-center sm:items-center h-[90%] md:h-[85%] md:w-[45%] '>
-
+        <div className='NavBar flex h-[85%] md:h-[100%] md:w-[45%]  justify-end'>
+          <button className="button m-1 md:mt-[5%] mr-4 h-[25px] w-[25px] md:h-[30px] md:w-[30px]" onClick={() => {
+            setOpen(!open)
+          }}><ArrowBackIosNewIcon sx={{ color: '#F5F9F9', width: '100%', height: '100%' }} /></button>
+        
         </div>
       </div>
 

@@ -1,5 +1,7 @@
 import ContentL2 from "./ContentL2"
 
+
+
 const ContentL1 = ({ content , getDetails , search }) => {
     
     content.L2content = content.L2content.filter((course) => {
@@ -8,6 +10,11 @@ const ContentL1 = ({ content , getDetails , search }) => {
         const regex = new RegExp(search, 'gi');
         if (course.CourseTitle.match(regex) || course.CourseCode.match(regex)) {
             flag = true;
+        }
+
+        const regex2 = /^\s*$/
+        if (search.match(regex2)) {
+            flag = true
         }
         if (flag) {
             return course
