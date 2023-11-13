@@ -8,8 +8,13 @@ import ContentL1 from './ContentL1';
 import axios from 'axios';
 import Details from './Details';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import MenuIcon from '@mui/icons-material/Menu';
+import { useNavigate } from 'react-router-dom';
 
-const App = () => {
+
+const App = ({ user, setUser }) => {
+
+  const navigate = useNavigate();
 
   const [data, setData] = useState(
     {
@@ -57,12 +62,12 @@ const App = () => {
   });
 
 
-  const [user, setUser] = useState({
-    "userID": "dhruv22",
-    "password": "adminpass",
-    "branch": "CSE",
-    "programme": "BTECH"
-  });
+  // const [user, setUser] = useState({
+  //   // "userID": "dhruv22",
+  //   // "password": "adminpas",
+  //   // "branch": "CSE",
+  //   // "programme": "BTECH"
+  // });
 
   //seperateBy will have the dictionary with seperateBy options
   const [seperateBy, setSeperateBy] = useState({
@@ -124,6 +129,13 @@ const App = () => {
     }
   })
 
+  const [logout, setlogout] = useState(false);
+
+  const logoutHandler = () => { 
+    setlogout(true);
+    navigate("/");
+  }
+
   return (
     <div className="container min-h-[100vh]" style={
       {
@@ -140,16 +152,30 @@ const App = () => {
             background: "linear-gradient(to bottom, #29B6C9, #f2f2f25f)",
           }}
       >
-        <div className='TitleBox flex items-center justify-center h-[8vh] md:h-[10vh] md:w-[45%] md:ml-[4vw] bg-stone-50 md:rounded-bl-[5px] md:rounded-br-[5px] shadow overflow-hidden' >
+        <div className='TitleBox flex items-center justify-center h-[63px] md:h-[10vh] md:w-[45%] md:ml-[4vw] bg-stone-50 md:rounded-bl-[5px] md:rounded-br-[5px] shadow overflow-hidden' >
           <div className="TitleText p-3 text-center text-slate-500 text-3xl ld:text-4xl font-medium font-'Roboto' ">
-            IIIDMJ Course Collection
+            IIITDMJ Course Collection
           </div>
         </div>
-        <div className='NavBar flex h-[85%] md:h-[100%] md:w-[45%]  justify-end'>
-          <button className="button m-1 md:mt-[5%] mr-4 h-[25px] w-[25px] md:h-[30px] md:w-[30px]" onClick={() => {
+
+        <div className='NavBar flex h-[100%] md:w-[45%] items-center   justify-end md:mt-2 mt-[3px] mb-[3px]'>
+
+          <button className="logout_btn h-[30px] w-[70px] rounded-md  mr-4 mb-[3px] font-medium text-[15px] font-'Roboto' bg-stone-50 text-[#3e4856]" onClick={() => {
+            logout ? logoutHandler() : setlogout(true)
+            setTimeout(() => {
+              setlogout(false);
+            }, 3000);
+          }}>
+            {!logout && (<>{user.userID}</>)}
+            {logout && (<><p className='logout text-[#ffff]'>Logout?</p></>)}
+          </button>
+
+          <button className="button flex items-center justify-center  h-[35px] w-[35px] pb-1 " onClick={() => {
             setOpen(!open)
-          }}><ArrowBackIosNewIcon sx={{ color: '#F5F9F9', width: '100%', height: '100%' }} /></button>
-        
+          }}>
+            <MenuIcon className='iconflex md:mt-[10px]' sx={{ display: 'relative', color: '#F5F9F9', width: '100%', height: '100%' }} />
+          </button>
+
         </div>
       </div>
 

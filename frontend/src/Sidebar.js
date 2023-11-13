@@ -49,9 +49,9 @@ const Sidebar = ({ open, setOpen, search, setSearch, filter, setFilter, seperate
 
       }}>
         <div className='button '>
-        <button className="button ml-[80%] mr-[auto]" onClick={() => {
+        <button className="button ml-[80%] mr-[auto] h-[25px] w-[25px] md:h-[30px] md:w-[30px]" onClick={() => {
           setOpen(!open)
-        }}><ArrowBackIosNewIcon sx={{ color: '#F5F9F9' , width: '30px' , height: '30px'}} /></button>
+        }}><ArrowBackIosNewIcon sx={{ color: '#F5F9F9' , width: '100%' , height: '100%'}} /></button>
         </div>
         
         <div className='SearchBar flex md:h-[45px] h-[60px] w-[100%] bg-white rounded-[15px] mt-[10px] mb-[40px] md:mb-[3vh] pl-4'>
