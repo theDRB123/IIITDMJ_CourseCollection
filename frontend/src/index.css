@@ -5,3 +5,39 @@
 
 
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap');
+
+
+
+.buttonLogin:hover {
+    background-color: #d4d4d4;
+    color: #000000;
+}
+
+.buttonLogin:active {
+    background-color: #ffffff9b;
+    color: rgb(81, 86, 86);
+}
+
+.input {
+    border: rgba(139, 207, 255, 0.734) solid 2px;
+    border-radius: 5px;
+}
+
+.input:focus {
+    border: rgba(139, 207, 255, 0.734) solid 2px;
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar {
+    width: 0px;
+}
+
+option{
+    background-color: #567b86bc;
+    color: 'white';
+}
+
+select{
+    background-color: #567b86bc;
+    color: 'white';
+}

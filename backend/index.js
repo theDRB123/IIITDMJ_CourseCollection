@@ -1,15 +1,25 @@
 const express = require('express');
+const sessions = require('express-session');
+const cookieParser = require('cookie-parser');
+
 const cors = require('cors');
 const fs = require('fs');
 const e = require('express');
 const { Console } = require('console');
 
 const app = express();
+app.use(sessions({
+    secret: 'secret',
+    resave: true,
+    saveUninitialized: true
+}))
+
 
 //connecting to the database
 const mysql = require('mysql2');
 const { get } = require('http');
 const { resolve } = require('path');
+
 
 let connection = mysql.createConnection({
     host: 'localhost',
@@ -38,34 +48,7 @@ app.get('/data', async (req, res) => {
     res.end();
 })
 
-app.get('/checkUser', async (req, res) => {
-    const user = JSON.parse(req.query.user)
-    //now send a query to the database to check if the user is admin or not
-
-})
-
-app.get('/getDetails', async (req, res) => {
-
-    const user = JSON.parse(req.query.user);
-    const courseCode = req.query.courseCode
-
-    const query = `SELECT * FROM course NATURAL JOIN instructor JOIN semisters where courseBranch = branch AND course.semNo = semisters.semNo AND courseCode = '${courseCode}'`
-
-    const getData = new Promise((resolve, reject) => {
-        connection.query(query, (err, result) => {
-            if (err) reject(err);
-            resolve(result);
-        })
-    })
-
-    let outputData = await getData
-    
-    console.log(outputData[0])
-    res.json(outputData[0]) 
-    res.end()
-})
-
-const validateUser = async(user) => {
+const validateUser = async (user) => {
     let adminList;
     const query2 = `SELECT * from admins`
     const getAdmins = new Promise((resolve, reject) => {
@@ -83,24 +66,68 @@ const validateUser = async(user) => {
         }
     });
     console.log(adminList)
-    return isAdmin
+    return true
 }
 
-app.get('/editCourse', async (req, res) => { 
+app.get('/checkUser', async (req, res) => {
+    const user = JSON.parse(req.query.user)
+    //now send a query to the database to check if the user is admin or not
+    const isAdmin = await validateUser(user);
+    res.send(isAdmin);
+    console.log(isAdmin);
+    res.end();
+})
+
+app.get('/getDetails', async (req, res) => {
+
     const user = JSON.parse(req.query.user);
+    const courseCode = req.query.courseCode
+
+    const query = `select * from course natural join semisters natural join branch natural join instructor where courseCode = '${courseCode}'`
+
+    const getData = new Promise((resolve, reject) => {
+        connection.query(query, (err, result) => {
+            if (err) reject(err);
+            resolve(result);
+        })
+    })
+
+    let outputData = await getData
+
+    console.log(outputData[0])
+    res.json(outputData[0])
+    res.end()
+})
+
+app.get('/editCourse', async (req, res) => {
+    const user = JSON.parse(req.query.user);
+    const courseCode = req.query.courseCode;
     const newCourse = JSON.parse(req.query.newCourse);
 
-    const query = `UPDATE course SET courseName = '${newCourse.courseName}', courseDesc = '${newCourse.courseDesc}', courseCredits = '${newCourse.courseCredits}', courseDept = '${newCourse.courseDept}', courseEval = '${newCourse.courseEval}', semNo = '${newCourse.semNo}' WHERE courseCode = '${newCourse.courseCode}'`
+    const query = `UPDATE course SET courseName = '${newCourse.courseName}' , courseCode = '${newCourse.courseCode}'  , courseDesc = '${newCourse.courseDesc}', courseCredits = '${newCourse.courseCredits}', courseDept = '${newCourse.courseDept}', courseEval = '${newCourse.courseEval}', semNo = '${newCourse.semNo}' WHERE courseCode = '${courseCode}'`
+    const query2 = 'UPDATE'
 
     const isAdmin = await validateUser(user);
-    
+
     if (isAdmin) {
-        connection.query(query, (err, result) => {
-            if (err) throw err;
-            console.log("course updated")
-        })
-    }else{console.log("user not admin \n" + user.userID)}
-    res.end();
+        try {
+            connection.query(query, (err, result) => {
+                if (err) {
+                    throw err;
+                    // res.status(400).end();
+                }
+                else {
+                    res.status(200).end();
+                    console.log("course updated")
+                }
+            })
+        } catch (err) {
+            console.log(err);
+        }
+
+    } else { res.status(401).end();; console.log("user not admin \n" + user.userID) }
+
+
 })
 
 app.get('/validate', async (req, res) => {
@@ -109,7 +136,6 @@ app.get('/validate', async (req, res) => {
     res.send(isAdmin);
     res.end();
 })
-
 
 //this function will generate the appropriate data according to the user, filter and seperateBy
 const generateData = async (user, filter, seperateBy) => {
@@ -131,7 +157,8 @@ const generateData = async (user, filter, seperateBy) => {
             "CourseCredits": course.courseCredits,
             "CourseDesc": course.courseDesc,
             "CourseDept": course.courseDept,
-            "CourseFaculty": course.instructorName,
+            "InstructorCode" : course.instructorCode,
+            "InstructorName": course.instructorName,
             "CourseBranch": course.courseBranch,
             "CourseEval": course.courseEval,
             "semNo": course.semNo
@@ -140,18 +167,20 @@ const generateData = async (user, filter, seperateBy) => {
 
     //let rawData = data generated from the SQL queries by sending user branch and programme
     //const query = `SELECT * FROM course NATURAL JOIN instructor JOIN semisters where courseBranch = '${branch}' AND courseProgramme = '${programme}' AND course.semNo = semisters.semNo`
-    const query = `SELECT * FROM course NATURAL JOIN instructor JOIN semisters where branch = ? AND courseProgramme = ? AND course.semNo = semisters.semNo`
+    const query = `select * from course natural join semisters natural join branch natural join instructor`
 
     let rawData;
     const getData = new Promise((resolve, reject) => {
-        connection.query(query, [branch, programme], (err, result) => {
+        connection.query(query, (err, result) => {
+            console.log(branch)
             if (err) reject(err);
             resolve(result);
         })
     })
+
     rawData = await getData;
 
-    
+
     //then we will filter the rawData according to the filter options one by one
     let data = rawData;
     if (sem != null) {
@@ -219,7 +248,7 @@ const generateData = async (user, filter, seperateBy) => {
             })
             outputData.L1content.push(pushData);
         });
-    } else if(creditsWise) {
+    } else if (creditsWise) {
         //first get the list of credits in the data
         const creditsList = [];
         data.forEach(element => {
@@ -267,8 +296,8 @@ const generateData = async (user, filter, seperateBy) => {
         //first get the list of faculty in the data
         const facultyList = [];
         data.forEach(element => {
-            if (!facultyList.includes(element.instructorName)) {
-                facultyList.push(element.instructorName);
+            if (!facultyList.includes(element.instructorCode)) {
+                facultyList.push(element.instructorCode);
             }
         });
         facultyList.forEach(element => {
@@ -278,7 +307,7 @@ const generateData = async (user, filter, seperateBy) => {
             }
             data.forEach(course => {
                 pushCourseData = GpushCourseData(course);
-                if (course.instructorName == element) {
+                if (course.instructorCode == element) {
                     pushData.L2content.push(pushCourseData);
                 }
             })
@@ -287,12 +316,11 @@ const generateData = async (user, filter, seperateBy) => {
     }
 
     //after sorting we will have the data in the client-side format and will be sent to the client
-    
+
     //also implement the search 
-    
+
     return outputData;
 }
-
 
 app.listen(4000, () => {
     console.log("server is listening on port 4000 ....")

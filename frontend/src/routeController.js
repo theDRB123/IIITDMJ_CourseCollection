@@ -1,23 +1,24 @@
 import App from "./App.js"
+import LandingPage from "./landingPage.js";
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { useState } from "react"
 
 const RouteController = () => {
 
     const [user, setUser] = useState({
-        "userID": "dhruv22",
-        "password": "adminpas",
+        "userID": "",
+        "password": "",
         "branch": "CSE",
         "programme": "BTECH"
     });
 
+    const [login, setLogin] = useState(false)
+    
     return (
-        <BrowserRouter>
-            <Routes>
-                <Route path="/login" element={<App user={user} setUser={setUser} />} />
-                <Route path="/collection" element={<App user={user} setUser={setUser} />} />
-            </Routes>
-        </BrowserRouter>
+        <>
+            <LandingPage user={user} setUser={setUser} login={login} setLogin={setLogin}/>
+            <App user={user} setUser={setUser} login={login} setLogin={setLogin} />
+        </>
     )
 }
 

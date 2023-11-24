@@ -3,8 +3,6 @@ import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 
 const Sidebar = ({ open, setOpen, search, setSearch, filter, setFilter, seperateBy, setSeperateBy }) => {
 
-
-
   const changeSeperateBy = (target) => {
     let temp = {
       "sem": false,
@@ -41,12 +39,11 @@ const Sidebar = ({ open, setOpen, search, setSearch, filter, setFilter, seperate
   return (
     <>
       
-      <div className={`SideBar  flex-col h-[100vh] z-40 md:w-[33%] w-[100%] p-4 pt-[150px] md:pt-[5vh] fixed md:top-1/2 md:-translate-y-1/2   ${open ? 'md:left-[67%]' : 'md:left-[150%]'} ${open ? 'left-[0%]' : 'left-[150%]'}  md:translate-x-150 md:rounded-tl-[30px]`} style={{
+      <div className={`SideBar  flex-col h-[100vh] z-30 md:w-[33%] w-[100%] p-4 pt-[150px] md:pt-[5vh] fixed md:top-1/2 md:-translate-y-1/2   ${open ? 'md:left-[67%]' : 'md:left-[150%]'} ${open ? 'left-[0%]' : 'left-[150%]'}  md:translate-x-150 md:rounded-tl-[30px]`} style={{
         background: "linear-gradient(180deg, #89D2D5 0%, rgba(73, 170, 173, 0.48) 19.09%, rgba(14, 133, 137, 0.00) 100%",
         'backdrop-filter': 'blur(15px)',
         transitionDuration: 1000,
-        transition: 'all 0.5s ease-in-out',
-
+        transition: 'all 0.5s ease-in-out'
       }}>
         <div className='button '>
         <button className="button ml-[80%] mr-[auto] h-[25px] w-[25px] md:h-[30px] md:w-[30px]" onClick={() => {
@@ -58,7 +55,6 @@ const Sidebar = ({ open, setOpen, search, setSearch, filter, setFilter, seperate
           <label htmlFor="search" className='label invisible absolute' >SearchBar</label>
           <input type="text" name="search" placeholder='Search' id="search" value={search} className='search m-auto ml-0' onChange={(e) => {
             setSearch(e.target.value)
-            console.log(search);
           }} />
         </div>
 
@@ -67,21 +63,21 @@ const Sidebar = ({ open, setOpen, search, setSearch, filter, setFilter, seperate
           <div className='FilterOptionContainer'>
             <div className='FilterSem md:h-[30px] h-[45px] w-[100%] bg-[#567b86bc] md:mb-1 mb-2 rounded-[10px] flex pl-3 items-center'>
               <label htmlFor="FilterSem" className='w-[20%] text-[#ffffff]'>Sem</label>
-              <select name="FilterSem" id="FilterSem" className='w-[75%] flex text-center justify-end bg-[#00000000] text-white' value={filter.sem} onChange={(e) => {
+              <select name="FilterSem" id="FilterSem" className='w-[75%] flex text-center justify-end bg-transparent  text-white' value={filter.sem} onChange={(e) => {
                 setFilter({
                   ...filter,
                   "sem": e.target.value
                 })
               }} >
-                <option value="0">All</option>
-                <option value="1">Sem1</option>
-                <option value="2">Sem2</option>
-                <option value="3">Sem3</option>
-                <option value="4">Sem4</option>
-                <option value="5">Sem5</option>
-                <option value="6">Sem6</option>
-                <option value="7">Sem7</option>
-                <option value="8">Sem8</option>
+                <option className="option" value="0">All</option>
+                <option className="option" value="1">Sem1</option>
+                <option className="option" value="2">Sem2</option>
+                <option className="option" value="3">Sem3</option>
+                <option className="option" value="4">Sem4</option>
+                <option className="option" value="5">Sem5</option>
+                <option className="option" value="6">Sem6</option>
+                <option className="option" value="7">Sem7</option>
+                <option className="option" value="8">Sem8</option>
               </select>
             </div>
             <div className='FilterDepartment md:h-[30px] h-[45px] w-[100%] bg-[#567b86bc] md:mb-1 mb-2 rounded-[10px] flex pl-3 items-center'>
@@ -92,6 +88,7 @@ const Sidebar = ({ open, setOpen, search, setSearch, filter, setFilter, seperate
                   "dept": e.target.value
                 })
               }}>
+                <option value='0'>All</option>
                 <option value="CSE">CSE</option>
                 <option value="ECE">ECE</option>
                 <option value="ME">ME</option>

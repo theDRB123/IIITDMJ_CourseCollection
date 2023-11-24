@@ -12,9 +12,8 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { useNavigate } from 'react-router-dom';
 
 
-const App = ({ user, setUser }) => {
 
-  const navigate = useNavigate();
+const App = ({ user, setUser, login, setLogin }) => {
 
   const [data, setData] = useState(
     {
@@ -78,7 +77,7 @@ const App = ({ user, setUser }) => {
     "faculty": false
   });
 
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
 
   useEffect(() => {
@@ -89,7 +88,6 @@ const App = ({ user, setUser }) => {
   //get the data for the specified course id
   const [details, setDetails] = useState()
   const getDetails = async (courseCode) => {
-    console.log(courseCode)
     axios.get(`http://localhost:4000/getDetails?courseCode=${courseCode}&user=${JSON.stringify(user)}`)
       .then((res) => {
         setDetails(res.data)
@@ -129,15 +127,22 @@ const App = ({ user, setUser }) => {
     }
   })
 
-  const [logout, setlogout] = useState(false);
-
-  const logoutHandler = () => { 
-    setlogout(true);
-    navigate("/");
+  const loginHandler = () => {
+    setUser(
+      {
+        "userID": "",
+        "password": "",
+        "branch": "CSE",
+        "programme": "BTECH"
+      }
+    )
+    setLogin(false);
   }
 
+  const [logout, setLogout] = useState(false);
+
   return (
-    <div className="container min-h-[100vh]" style={
+    <div className={`container min-h-[100vh] ease-in-out duration-1000 ${!login ? " translate-y-[0px] overflow-hidden" : ""}`} style={
       {
         minWidth: "100%",
         background: "linear-gradient(to bottom, #29B6C960, #f2f2f25f)"
@@ -146,7 +151,7 @@ const App = ({ user, setUser }) => {
 
       {!showDetails && (<Sidebar open={open} setOpen={setOpen} search={search} setSearch={setSearch} filter={filter} setFilter={setFilter} seperateBy={seperateBy} setSeperateBy={setSeperateBy} />)}
 
-      <div className="TitleContainer md:flex w-[100%] h-auto md:pb-5 left-0 top-[0px] sticky bg-[#f2f2f25f] backdrop-blur-sm mb-3"
+      <div className="TitleContainer md:flex w-[100%] ease-in-out duration-1000 h-auto md:pb-5 left-0 top-[0px] sticky bg-[#f2f2f25f] backdrop-blur-sm mb-3"
         style={
           {
             background: "linear-gradient(to bottom, #29B6C9, #f2f2f25f)",
@@ -159,23 +164,21 @@ const App = ({ user, setUser }) => {
         </div>
 
         <div className='NavBar flex h-[100%] md:w-[45%] items-center   justify-end md:mt-2 mt-[3px] mb-[3px]'>
-
-          <button className="logout_btn h-[30px] w-[70px] rounded-md  mr-4 mb-[3px] font-medium text-[15px] font-'Roboto' bg-stone-50 text-[#3e4856]" onClick={() => {
-            logout ? logoutHandler() : setlogout(true)
+          {login&&(<button className="login_btn h-[30px] w-[70px] rounded-md  mr-4 mb-[3px] font-medium text-[15px] font-'Roboto' bg-stone-50 text-[#3e4856]" onClick={() => {
+            logout ? loginHandler() : setLogout(true)
             setTimeout(() => {
-              setlogout(false);
+              setLogout(false);
             }, 3000);
           }}>
-            {!logout && (<>{user.userID}</>)}
-            {logout && (<><p className='logout text-[#ffff]'>Logout?</p></>)}
-          </button>
+            {!logout && (<>{user.userID} </>)}
+            {logout && (<><p className='login text-[#ca7878]'>logout?</p></>)}
+          </button>)}
 
           <button className="button flex items-center justify-center  h-[35px] w-[35px] pb-1 " onClick={() => {
             setOpen(!open)
           }}>
             <MenuIcon className='iconflex md:mt-[10px]' sx={{ display: 'relative', color: '#F5F9F9', width: '100%', height: '100%' }} />
           </button>
-          
         </div>
       </div>
 

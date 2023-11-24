@@ -33,7 +33,7 @@ const ContentL1 = ({ content , getDetails , search }) => {
 
             <div className='ContentL1.5 flex w-[100%] h-[260px] overflow-auto lg:pb-3 md:pb-3'>
                 {content.L2content.map((content) => {
-                    return (<ContentL2 key={content.CourseTitle}  content={content} getDetails={getDetails} />)
+                    return (<ContentL2 key={content.CourseTitle} content={content} getDetails={getDetails} />)
                 })}
             
             </div>
